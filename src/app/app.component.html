@@ -1,0 +1,47 @@
+<mat-toolbar>
+  <button mat-icon-button (click)="sidenav.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <span>Angular 19 Online shop "Test"</span>
+
+  <span class="example-spacer"></span>
+
+
+  <button mat-icon-button class="example-icon" routerLink="products">
+    <mat-icon>apps</mat-icon>
+  </button>
+  <button mat-icon-button class="example-icon" routerLink="basket">
+    <mat-icon>shopping_cart</mat-icon>
+  </button>
+  <button mat-icon-button class="example-icon" routerLink="userLogin">
+    <mat-icon>person</mat-icon>
+  </button>
+  <button mat-icon-button class="example-icon" routerLink="adminPanel">
+    <mat-icon>admin_panel_settings</mat-icon>
+  </button>
+</mat-toolbar>
+
+<mat-sidenav-container>
+  <mat-sidenav mode="side" #sidenav (click)="sidenav.toggle()">
+    <mat-nav-list appNavListKeyManager>
+      @for (item of navItems; track item) {
+      <a
+        mat-list-item
+        appListItemFocusable
+        [routerLink]="[item.route]"
+        routerLinkActive
+        [routerLinkActiveOptions]="{ exact: true }"
+        #rla="routerLinkActive"
+        [activated]="rla.isActive"
+      >
+        <span matListItemTitle>{{ item.title }}</span>
+        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+      </a>
+      }
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
