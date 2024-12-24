@@ -1,1 +1,33 @@
-<p>product-details works!</p>
+<div class="conteiner">
+<mat-card>
+  <div class="header">
+    <mat-card-header>{{ product?.title }}</mat-card-header>
+    <span class="example-spacer"></span>
+    <mat-card-actions>
+      <p>{{product?.price | currency  }}</p>
+    </mat-card-actions>
+    <button mat-icon-button class="example-icon">
+      <mat-icon>shopping_cart</mat-icon>
+    </button>
+  </div>
+  <mat-divider></mat-divider>
+  <div class="conteiner-content">
+    <div class="mat-card-image-block">
+      <img class="mat-card-image" mat-card-image src={{product?.image}} alt="Photo of a Shiba Inu">
+    </div>
+    <div class="conteiner-info">
+      <mat-card-content class="mat-card-content-row">
+        <mat-card-title class="title">Category:</mat-card-title>
+        <mat-card-title class="mat-card-title-val">{{ product?.category }} </mat-card-title>
+      </mat-card-content>
+      <br />
+      <mat-card-content class="mat-card-content-colum">
+        <mat-card-title class="title">Description:</mat-card-title>
+        <br />
+        <mat-card-title>{{ product?.description }} </mat-card-title>
+      </mat-card-content>
+      <br />
+    </div>
+  </div>
+</mat-card>
+</div>
