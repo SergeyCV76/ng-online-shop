@@ -1,0 +1,110 @@
+
+mat-card{
+  background-color: white;
+  border: solid #bcb8ac 1px;
+  user-select: none;
+
+}
+
+.container {
+  padding: 24px;
+}
+
+img {
+  width: 100%;
+  height: 200px;
+  object-fit: contain;
+}
+
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 24px;
+}
+
+.loader{
+  flex-direction: column;
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+}
+
+.mat-card-image-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.mat-card-image{
+  display: block;
+  max-width: 80%;
+  max-height: 80%;
+  cursor: pointer;
+}
+
+mat-card-header{
+  cursor: pointer;
+}
+
+mat-paginator {
+  display: flex;
+  justify-content: center;
+  border-radius: 10px;
+  background-color: white;
+}
+
+mat-card-actions{
+  background-color: #bcb8ac;
+  margin-top: auto;
+}
+
+mat-nav-list{
+  border: solid #bcb8ac 1px;
+  height: calc(100% - 100px);
+  margin-top: 10px;
+  padding: 0 10px;
+  text-transform:capitalize
+}
+
+.header{
+ display: flex;
+ background-color: white;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+mat-form-field{
+  height: 60px;
+  width: 300px;
+  font-size: 16px;
+}
+
+.mat-mdc-text-field-wrapper {
+  cursor: pointer;
+  background-color: white;
+}
+
+mat-form-field{
+  background-color: white;
+}
+
+::ng-deep .mat-mdc-form-field-type-mat-select:not(.mat-form-field-disabled) .mat-mdc-text-field-wrapper {
+  background-color: white;
+  border-radius: 5px;
+}
+
+.example-icon{
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  color: dimgrey;
+}
+
+.mat-drawer-container{
+  height: 80vh;
+}

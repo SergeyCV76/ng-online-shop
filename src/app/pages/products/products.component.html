@@ -1,1 +1,59 @@
-<p>products works!</p>
+<div class="header">
+  <h1>Page products</h1>
+  <span class="example-spacer"></span>
+  <mat-form-field >
+    <mat-select value = "1" (selectionChange)="onSelectValueSort($event)">
+      <mat-option value="1">Price: Low to High</mat-option>
+      <mat-option value="2">Price: High to Low</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<mat-divider></mat-divider>
+<div *ngIf="loading()">
+  <div class="loader">
+    <mat-spinner></mat-spinner>
+    <p>loading...</p>
+  </div>
+</div>
+<div *ngIf="error()" class="error">{{ error() }}</div>
+<ul *ngIf="!loading() && !error()">
+  <mat-drawer-container class="example-container">
+    <mat-drawer mode="side" opened>
+      <h2>Product categories</h2>
+      <mat-nav-list>
+        <a mat-list-item (click)="getProductsByCategory('all')">
+          <span matListItemTitle>All products</span>
+        </a>
+        @for (item of categories(); track item) {
+        <a
+          mat-list-item
+          (click)="getProductsByCategory(item)"
+        >
+          <span matListItemTitle>{{ item }}</span>
+        </a>
+        }
+      </mat-nav-list>
+    </mat-drawer>
+    <mat-drawer-content>
+      <div class="container responsive-grid">
+        <mat-card *ngFor="let product of products()">
+          <div [routerLink]="['/product/', product.id]" class="mat-card-image-block">
+            <img class="mat-card-image" mat-card-image src={{product.image}} alt="Photo of a Shiba Inu">
+          </div>
+          <mat-card-header [routerLink]="['/product/', product.id]">
+            <mat-card-title>{{ product.title }} </mat-card-title>
+          </mat-card-header>
+          <br />
+          <mat-card-actions>
+            <p>{{product.price | currency }}</p>
+            <span class="example-spacer"></span>
+            <button mat-icon-button class="example-icon">
+              <mat-icon>shopping_cart</mat-icon>
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+      <mat-paginator class="mat-paginator" [pageSizeOptions]="[4, 8, 12, 16]" ></mat-paginator>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</ul>
