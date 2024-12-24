@@ -7,6 +7,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatInputModule } from '@angular/material/input';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { UserLoginComponent } from './pages/user-login/user-login.component';
 
 
 @Component({
@@ -50,7 +52,15 @@ export class AppComponent implements OnInit{
       icon: 'admin_panel_settings',
     },
   ]
-    constructor() {}
+    constructor(public formLogin: MatDialog) {}
 
     ngOnInit() {}
+
+    openDialog() {
+
+    let formLoginConfig = new MatDialogConfig();
+    formLoginConfig.width = '500px';
+    this.formLogin.open(UserLoginComponent, formLoginConfig);
+
+  }
 }

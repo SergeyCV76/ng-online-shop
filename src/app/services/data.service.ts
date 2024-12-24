@@ -11,6 +11,8 @@ export class DataService {
 
   private readonly apiUrl = 'https://fakestoreapi.com';
 
+  private currentUser: user = new user()
+
   constructor(private http: HttpClient) { }
 
   public getProducts(): Observable<IProducts[]> {
@@ -37,6 +39,25 @@ export class DataService {
     );;
   }
 
+  public userlogin(user: user): Observable<user>{
+    const httpOptions = {
+       headers: new HttpHeaders({
+         'Content-Type':  'application/json',
+       })
+     };
+     return this.http.post<user>(`${this.apiUrl}/auth/login` ,JSON.stringify(user), httpOptions).pipe(
+       catchError(this.handleError)
+     );
+   }
+
+   public setCurrentUser(user: user): void{
+     this.currentUser = user;
+   }
+
+   public getCurrentUser(): user{
+     return this.currentUser;
+   }
+
   private handleError(error: HttpErrorResponse) {
     if (error.status === 401) {
       console.error('Authorization error: 401');
@@ -45,7 +66,5 @@ export class DataService {
     }
     return throwError(() => new Error('An error has occurred. Please try again.'));
   }
-
-
 
 }

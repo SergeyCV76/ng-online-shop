@@ -1,4 +1,12 @@
 
+@use '@angular/material' as mat;
+
+:root {
+  @include mat.form-field-overrides((
+    filled-container-color: white,
+  ));
+}
+
 html,
 body {
   height: 100%;

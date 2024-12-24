@@ -1,0 +1,25 @@
+
+.mat-mdc-button:not(:disabled) {
+  color: dimgrey;
+}
+
+mat-dialog-content{
+  display: flex;
+  flex-direction: column;
+}
+
+button{
+  width: 100%;
+  border: solid 1px black;
+  color: black;
+  background-color: white;
+}
+
+button:hover{
+  background-color: #bcb8ac;
+}
+
+.red-text{
+  color: red;
+  font-size: 16px;
+}
