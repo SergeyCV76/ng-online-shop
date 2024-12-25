@@ -1,8 +1,9 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
-import { ICategories, IProducts, user } from '../models/products';
-import { catchError, of, Subscription, throwError } from 'rxjs';
+import { basket, ICategories, products, user } from '../models/products';
+import { BehaviorSubject, catchError, of, Subscription, throwError } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
@@ -11,12 +12,26 @@ export class DataService {
 
   private readonly apiUrl = 'https://fakestoreapi.com';
 
-  private currentUser: user = new user()
+  private httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type':  'application/json',
+    })
+  };
 
-  constructor(private http: HttpClient) { }
+  public currentUser: user = new user()
+  public allUsers: user[] = [];
+  public countBasket: number = 0
 
-  public getProducts(): Observable<IProducts[]> {
-    return this.http.get<IProducts[]>(`${this.apiUrl}/products`).pipe(
+  private badgeCountSource = new BehaviorSubject<number>(0);
+  currentBadgeCount = this.badgeCountSource.asObservable();
+
+
+  constructor(
+    private http: HttpClient
+  ) { }
+
+  public getProducts(): Observable<products[]> {
+    return this.http.get<products[]>(`${this.apiUrl}/products`).pipe(
       catchError(this.handleError)
     );;
   }
@@ -27,36 +42,60 @@ export class DataService {
     );;
   }
 
-  public getProductsById(id: number): Observable<IProducts> {
-    return this.http.get<IProducts>(`${this.apiUrl}/products/${id}`).pipe(
+  public getProductsById(id: number): Observable<products> {
+    return this.http.get<products>(`${this.apiUrl}/products/${id}`).pipe(
       catchError(this.handleError)
     );;
   }
 
-  public getProductsByСategory(category: ICategories): Observable<IProducts[]> {
-    return this.http.get<IProducts[]>(`${this.apiUrl}/products/category/${category}`).pipe(
+  public getProductsByСategory(category: ICategories): Observable<products[]> {
+    return this.http.get<products[]>(`${this.apiUrl}/products/category/${category}`).pipe(
       catchError(this.handleError)
     );;
   }
 
   public userlogin(user: user): Observable<user>{
-    const httpOptions = {
-       headers: new HttpHeaders({
-         'Content-Type':  'application/json',
-       })
-     };
-     return this.http.post<user>(`${this.apiUrl}/auth/login` ,JSON.stringify(user), httpOptions).pipe(
+     return this.http.post<user>(`${this.apiUrl}/auth/login` ,JSON.stringify(user), this.httpOptions).pipe(
        catchError(this.handleError)
      );
    }
 
+
+
+
+
+   public getAllUser(): Observable<user[]>{
+    return this.http.get<user[]>(`${this.apiUrl}/users/`).pipe(
+      catchError(this.handleError)
+    )
+   }
+
+   public addProductToBasket(product: products): Observable<basket>{
+
+    const myRequest = {
+      userId: this.currentUser.id,
+      date: new Date(),
+      products:[{productId:product.id, quantity:1}]
+    }
+
+    return this.http.post<basket>(`${this.apiUrl}/carts` ,JSON.stringify(myRequest), this.httpOptions).pipe(
+      catchError(this.handleError)
+    );
+   }
+
+   public updateBadgeCount(count: number) { this.badgeCountSource.next(count); }
+
    public setCurrentUser(user: user): void{
-     this.currentUser = user;
+    this.currentUser = user;
    }
 
    public getCurrentUser(): user{
      return this.currentUser;
    }
+
+
+
+
 
   private handleError(error: HttpErrorResponse) {
     if (error.status === 401) {

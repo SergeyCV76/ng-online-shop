@@ -1,4 +1,5 @@
 <h2 mat-dialog-title>Please log in</h2>
+<mat-progress-bar mode="indeterminate" *ngIf="myFormLoginPass.disabled"></mat-progress-bar>
 <mat-divider></mat-divider>
 <form [formGroup]="myFormLoginPass" class="example-form">
   <mat-dialog-content>
@@ -15,6 +16,7 @@
         (click)="clickEvent($event)"
         [attr.aria-label]="'Hide password'"
         [attr.aria-pressed]="hide()"
+        [disabled]="myFormLoginPass.invalid || myFormLoginPass.disabled"
       >
         <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
       </button>

@@ -1,4 +1,4 @@
-<mat-toolbar>
+<mat-toolbar >
   <button mat-icon-button (click)="sidenav.toggle()">
     <mat-icon>menu</mat-icon>
   </button>
@@ -12,7 +12,7 @@
     <mat-icon>apps</mat-icon>
   </button>
   <button mat-icon-button class="example-icon" routerLink="basket">
-    <mat-icon>shopping_cart</mat-icon>
+    <mat-icon aria-hidden="false" matBadge={{countBasket}}>shopping_cart</mat-icon>
   </button>
   <button mat-icon-button class="example-icon" (click)="openDialog()">
     <mat-icon>person</mat-icon>

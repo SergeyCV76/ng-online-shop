@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,6 +9,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { UserLoginComponent } from './pages/user-login/user-login.component';
+import { MatBadgeModule } from '@angular/material/badge';
+import { DataService } from './services/data.service';
 
 
 @Component({
@@ -24,11 +26,15 @@ import { UserLoginComponent } from './pages/user-login/user-login.component';
     MatSidenavModule,
     MatToolbarModule,
     MatInputModule,
+    MatBadgeModule,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit{
+
+  public countBasket: number = 0;
+
   public navItems =
   [
     {
@@ -52,15 +58,24 @@ export class AppComponent implements OnInit{
       icon: 'admin_panel_settings',
     },
   ]
-    constructor(public formLogin: MatDialog) {}
+    constructor(
+      public formLogin: MatDialog,
+      private dataService: DataService,
+    ) {}
 
-    ngOnInit() {}
+    ngOnInit() {
+      this.setCountBasket()
+    }
 
     openDialog() {
+      let formLoginConfig = new MatDialogConfig();
+      formLoginConfig.width = '500px';
+      this.formLogin.open(UserLoginComponent, formLoginConfig);
+    }
 
-    let formLoginConfig = new MatDialogConfig();
-    formLoginConfig.width = '500px';
-    this.formLogin.open(UserLoginComponent, formLoginConfig);
+    public setCountBasket(): void {
+      this.dataService.currentBadgeCount.subscribe(count => this.countBasket = count);
+    }
 
-  }
+
 }

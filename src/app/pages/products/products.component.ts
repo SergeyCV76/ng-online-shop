@@ -1,5 +1,7 @@
+import { AppComponent } from './../../app.component';
+import { user, basket, products } from './../../models/products';
 
-import { ChangeDetectionStrategy, Component, computed, OnInit, signal} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, EventEmitter, OnInit, Output, signal} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDividerModule } from '@angular/material/divider';
 import { DataService } from '../../services/data.service';
@@ -13,7 +15,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 
 import { Router, RouterLink} from '@angular/router';
-import { ICategories, IProducts } from '../../models/products';
+import { ICategories } from '../../models/products';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { UserLoginComponent } from '../user-login/user-login.component';
+
 
 
 
@@ -30,8 +36,9 @@ import { ICategories, IProducts } from '../../models/products';
     MatListModule,
     MatSelectModule,
     MatIconModule,
-    RouterLink
-  ],
+    RouterLink,
+    MatProgressBarModule
+],
   templateUrl: './products.component.html',
   styleUrl: './products.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -43,18 +50,20 @@ export class ProductsComponent implements OnInit{
   public categories = signal<ICategories[] | undefined>(undefined);
   private categoriesSubscription: Subscription | undefined;
 
-  public products = signal<IProducts[] | undefined>(undefined);
+  public products = signal<products[] | undefined>(undefined);
   private productsSubscription: Subscription | undefined;
 
   public loading = signal(false);
   public error = signal<string | null>(null);
 
   private valSort = "1";
-
+  public isDisabledBasket = signal(false);
+  private basket: basket = new basket
 
   constructor(
     private dataService: DataService,
-    private router: Router
+    private router: Router,
+    public formLogin: MatDialog,
   ) {}
 
   ngOnInit() {
@@ -63,6 +72,7 @@ export class ProductsComponent implements OnInit{
 
     this.getCategories();
     this.getProducts();
+
   }
 
   ngOnDestroy(){
@@ -78,10 +88,12 @@ export class ProductsComponent implements OnInit{
   }
 
   private getProducts(): void{
+    this.isDisabledBasket.set(true)
     this.productsSubscription = this.dataService.getProducts().pipe().subscribe(data => {
       this.products.set(data)
       this.sortProducts()
       this.loading.set(false)
+      this.isDisabledBasket.set(false)
   })
   }
 
@@ -89,9 +101,11 @@ export class ProductsComponent implements OnInit{
     if(category === 'all'){
       this.getProducts();
     }else{
+      this.isDisabledBasket.set(true)
       this.productsSubscription = this.dataService.getProductsByСategory(category).pipe().subscribe(data => {
         this.products.set(data)
         this.sortProducts()
+        this.isDisabledBasket.set(false)
       })
     }
   }
@@ -112,5 +126,34 @@ export class ProductsComponent implements OnInit{
       }
     });
     this.products.update(filteredcСrds);
+  }
+
+  public addProductToBasket(product: products){
+
+    const currentUser: user = this.dataService.currentUser;
+
+    if(currentUser.id > 0){
+      this.isDisabledBasket.set(true);
+
+      this.dataService.addProductToBasket(product).subscribe((data) => {
+        this.isDisabledBasket.set(false);
+
+        this.basket = data;
+        const countBasket: number = this.basket.products.length
+
+        this.dataService.countBasket = countBasket
+        this.dataService.updateBadgeCount(this.dataService.countBasket);
+
+      })
+    }else{
+      let formLoginConfig = new MatDialogConfig();
+      formLoginConfig.width = '500px';
+      this.formLogin.open(UserLoginComponent, formLoginConfig);
+    }
+
+  }
+
+  public showЗroductВetails(id: number){
+
   }
 }

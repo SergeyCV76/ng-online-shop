@@ -20,6 +20,7 @@ import {
 import { user } from '../../models/products';
 import { DataService } from '../../services/data.service';
 import { catchError, of, Subscription } from 'rxjs';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-user-login',
@@ -32,6 +33,7 @@ import { catchError, of, Subscription } from 'rxjs';
     MatIconModule,
     FormsModule,
     ReactiveFormsModule,
+    MatProgressBarModule
   ],
   templateUrl: './user-login.component.html',
   styleUrl: './user-login.component.scss',
@@ -39,7 +41,7 @@ import { catchError, of, Subscription } from 'rxjs';
 export class UserLoginComponent implements OnInit, OnDestroy {
   public data: user = new user();
   private userSubscription: Subscription | undefined;
-  private token: string = ""
+  private allUserSubscription: Subscription | undefined;
   public incorrectlogin: boolean = false
 
   constructor(
@@ -70,7 +72,19 @@ export class UserLoginComponent implements OnInit, OnDestroy {
       username: this.myFormLoginPass.value.username,
       password: this.myFormLoginPass.value.password,
       token: '',
+      id: 0
     };
+
+    this.allUserSubscription = this.dataService.getAllUser().subscribe(
+      (response) => {
+        const userSearch = response.filter(data => data.username === this.data.username)
+        if(userSearch.length > 0){
+          this.data.id = userSearch[0].id;
+        }else{
+          console.log("User is not registered")
+        }
+      }
+    );
 
     this.userSubscription = this.dataService.userlogin(this.data).subscribe(
       (response) => {
@@ -89,5 +103,6 @@ export class UserLoginComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if(this.userSubscription) this.userSubscription.unsubscribe
+    if(this.allUserSubscription) this.allUserSubscription.unsubscribe
   }
 }
