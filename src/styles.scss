@@ -5,6 +5,10 @@
   @include mat.form-field-overrides((
     filled-container-color: white,
   ));
+  @include mat.button-overrides((
+    filled-container-color: #bcb8ac,
+    filled-label-text-color: black,
+  ));
 }
 
 html,

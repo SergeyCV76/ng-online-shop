@@ -1,0 +1,47 @@
+
+
+.example-spacer{
+  flex: 1 1 auto;
+}
+
+button{
+  font-size: 24px;
+}
+
+.header{
+  display: flex;
+  flex-direction: row;
+  font-size: 36px;
+}
+mat-card-actions{
+  font-size: 36px;
+  gap: 30px;
+  margin: 0;
+}
+
+mat-card{
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  width: 100%;
+  border: solid 1px black;
+  background-color: white;
+  padding: 16px;
+  margin-top: 10px;
+}
+
+.mat-card-image-block {
+  display: flex;
+  width: 10%;
+  height: 10%;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.mat-card-image{
+  display: block;
+  max-width: 40%;
+  max-height: 40%;
+  cursor: pointer;
+}

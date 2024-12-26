@@ -1,3 +1,4 @@
+import { basketProduct } from './../models/products';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
@@ -18,9 +19,10 @@ export class DataService {
     })
   };
 
-  public currentUser: user = new user()
+  public currentUser: user = new user
   public allUsers: user[] = [];
   public countBasket: number = 0
+  public currentBasket: basket = new basket
 
   private badgeCountSource = new BehaviorSubject<number>(0);
   currentBadgeCount = this.badgeCountSource.asObservable();
@@ -29,6 +31,10 @@ export class DataService {
   constructor(
     private http: HttpClient
   ) { }
+
+  public updateBadgeCount(count: number) {
+    this.badgeCountSource.next(count);
+  }
 
   public getProducts(): Observable<products[]> {
     return this.http.get<products[]>(`${this.apiUrl}/products`).pipe(
@@ -60,10 +66,6 @@ export class DataService {
      );
    }
 
-
-
-
-
    public getAllUser(): Observable<user[]>{
     return this.http.get<user[]>(`${this.apiUrl}/users/`).pipe(
       catchError(this.handleError)
@@ -74,7 +76,7 @@ export class DataService {
 
     const myRequest = {
       userId: this.currentUser.id,
-      date: new Date(),
+      date: new Date().setHours(0, 0, 0, 0,),
       products:[{productId:product.id, quantity:1}]
     }
 
@@ -83,7 +85,24 @@ export class DataService {
     );
    }
 
-   public updateBadgeCount(count: number) { this.badgeCountSource.next(count); }
+   public updProductToBasket(product: basketProduct): Observable<basket>{
+
+    const myRequest = {
+       userId: this.currentUser.id,
+       date: new Date().setHours(0, 0, 0, 0,),
+       products:[{productId:product.productId, quantity:product.quantity}]
+    }
+
+    return this.http.put<basket>(`${this.apiUrl}/carts/${this.currentBasket.id}` ,JSON.stringify(myRequest), this.httpOptions).pipe(
+      catchError(this.handleError)
+    );
+   }
+
+   public delBasket(): Observable<any>{
+    return this.http.delete<any>(`${this.apiUrl}/carts/${this.currentBasket.id}`).pipe(
+      catchError(this.handleError)
+    );
+  }
 
    public setCurrentUser(user: user): void{
     this.currentUser = user;
@@ -92,10 +111,6 @@ export class DataService {
    public getCurrentUser(): user{
      return this.currentUser;
    }
-
-
-
-
 
   private handleError(error: HttpErrorResponse) {
     if (error.status === 401) {

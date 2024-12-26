@@ -21,9 +21,6 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { UserLoginComponent } from '../user-login/user-login.component';
 
 
-
-
-
 @Component({
   selector: 'app-products',
   imports: [
@@ -139,9 +136,22 @@ export class ProductsComponent implements OnInit{
         this.isDisabledBasket.set(false);
 
         this.basket = data;
-        const countBasket: number = this.basket.products.length
 
+
+        const countBasket: number = this.basket.products.length
         this.dataService.countBasket = countBasket
+
+        this.basket.products.map(item => {
+          if (item.productId === product.id)
+          {
+            item.productTitle = product.title
+            item.price = product.price
+            item.productImage = product.image
+          };
+        });
+
+
+        this.dataService.currentBasket = this.basket;
         this.dataService.updateBadgeCount(this.dataService.countBasket);
 
       })
@@ -153,7 +163,7 @@ export class ProductsComponent implements OnInit{
 
   }
 
-  public showЗroductВetails(id: number){
-
+  public openingDetailPage(){
+    this.isDisabledBasket.set(true)
   }
 }

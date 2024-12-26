@@ -11,6 +11,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { UserLoginComponent } from './pages/user-login/user-login.component';
 import { MatBadgeModule } from '@angular/material/badge';
 import { DataService } from './services/data.service';
+import { BasketComponent } from './pages/basket/basket.component';
 
 
 @Component({
@@ -67,7 +68,7 @@ export class AppComponent implements OnInit{
       this.setCountBasket()
     }
 
-    openDialog() {
+    public openUserLoginDialog() {
       let formLoginConfig = new MatDialogConfig();
       formLoginConfig.width = '500px';
       this.formLogin.open(UserLoginComponent, formLoginConfig);
@@ -76,6 +77,4 @@ export class AppComponent implements OnInit{
     public setCountBasket(): void {
       this.dataService.currentBadgeCount.subscribe(count => this.countBasket = count);
     }
-
-
 }

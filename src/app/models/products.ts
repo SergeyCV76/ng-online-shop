@@ -45,11 +45,17 @@ export class basket{
 
 export class basketProduct{
   public productId: number
+  public productTitle: string
+  public productImage: string
   public quantity: number
+  public price: number
 
   constructor(){
     this.productId = 0
+    this.productTitle = ""
+    this.productImage = ""
     this.quantity = 0
+    this.price = 0
   }
 }
 

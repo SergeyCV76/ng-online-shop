@@ -58,6 +58,7 @@ export class ProductDetailsComponent {
           this.basket = data;
           const countBasket: number = this.basket.products.length
 
+          this.dataService.currentBasket = this.basket;
           this.dataService.countBasket = countBasket
           this.dataService.updateBadgeCount(this.dataService.countBasket);
 
