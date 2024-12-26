@@ -1,5 +1,4 @@
 <div class="conteiner">
-  <mat-progress-bar mode="indeterminate" *ngIf="isDisabledBasket()"></mat-progress-bar>
 <mat-card>
   <div class="header">
     <mat-card-header>{{ product.title }}</mat-card-header>
@@ -12,6 +11,7 @@
     </button>
   </div>
   <mat-divider></mat-divider>
+  <mat-progress-bar mode="indeterminate" *ngIf="isDisabledBasket()"></mat-progress-bar>
   <div class="conteiner-content">
     <div class="mat-card-image-block">
       <img class="mat-card-image" mat-card-image src={{product.image}} alt="Photo of a Shiba Inu">
