@@ -2,13 +2,14 @@
   <h1>Page products</h1>
   <span class="example-spacer"></span>
   <mat-form-field >
-    <mat-select value = "1" (selectionChange)="onSelectValueSort($event)">
+    <mat-select [disabled]="isDisabledBasket()" value = "1" (selectionChange)="onSelectValueSort($event)">
       <mat-option value="1">Price: Low to High</mat-option>
       <mat-option value="2">Price: High to Low</mat-option>
     </mat-select>
   </mat-form-field>
 </div>
 <mat-divider></mat-divider>
+<mat-progress-bar mode="indeterminate" *ngIf="isDisabledBasket() && !loading()"></mat-progress-bar>
 <div *ngIf="loading()">
   <div class="loader">
     <mat-spinner></mat-spinner>
@@ -17,10 +18,10 @@
 </div>
 <div *ngIf="error()" class="error">{{ error() }}</div>
 <ul *ngIf="!loading() && !error()">
-  <mat-drawer-container class="example-container">
+  <mat-drawer-container  class="example-container">
     <mat-drawer mode="side" opened>
       <h2>Product categories</h2>
-      <mat-nav-list>
+      <mat-nav-list [disabled]="isDisabledBasket()">
         <a mat-list-item (click)="getProductsByCategory('all')">
           <span matListItemTitle>All products</span>
         </a>
@@ -36,14 +37,14 @@
     </mat-drawer>
     <mat-drawer-content>
 
-      <mat-progress-bar mode="indeterminate" *ngIf="isDisabledBasket()"></mat-progress-bar>
+
 
       <div class="container responsive-grid">
         <mat-card *ngFor="let product of products()">
-          <div [routerLink]="['/product/', product.id]" class="mat-card-image-block">
+          <div (click)="openingDetailPage()" [routerLink]="['/product/', product.id]" class="mat-card-image-block">
             <img class="mat-card-image" mat-card-image src={{product.image}} alt="Photo of a Shiba Inu">
           </div>
-          <mat-card-header [routerLink]="['/product/', product.id]">
+          <mat-card-header (click)="openingDetailPage()" [routerLink]="['/product/', product.id]">
             <mat-card-title>{{ product.title }} </mat-card-title>
           </mat-card-header>
           <br />
