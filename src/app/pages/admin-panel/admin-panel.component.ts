@@ -1,4 +1,4 @@
-import { basket } from './../../models/products';
+import { basket } from './../../models/basket';
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDividerModule } from '@angular/material/divider';
@@ -34,7 +34,7 @@ const year = today.getFullYear();
     MatButtonModule,
     MatIconModule,
     MatExpansionModule,
-    MatTableModule
+    MatTableModule,
   ],
   templateUrl: './admin-panel.component.html',
   styleUrl: './admin-panel.component.scss',
@@ -43,17 +43,20 @@ export class AdminPanelComponent implements OnInit {
   private listVasketsSubscription: Subscription | undefined;
   public loading = signal(false);
   public basketData = signal<basket[]>([]);
-  public sumBasket = signal(0)
-  public displayedColumns: string[] = ['productId', 'productTitle', 'quantity', 'price', 'Sum'];
-
+  public sumBasket = signal(0);
+  public displayedColumns: string[] = [
+    'productId',
+    'productTitle',
+    'quantity',
+    'price',
+    'Sum',
+  ];
 
   public formDateSelection: FormGroup = new FormGroup({
     // start: new FormControl(new Date(year, month, 15)),
     // end: new FormControl(new Date(year, month, 19)),
-
     start: new FormControl(new Date(2020, 0, 1)),
     end: new FormControl(new Date(2020, 0, 31)),
-
   });
 
   constructor(private dataService: DataService) {}
@@ -67,45 +70,43 @@ export class AdminPanelComponent implements OnInit {
   public getListBaskets() {
     this.loading.set(true);
 
-    this.basketData().splice(0,this.basketData().length);
-    this.setSumBasket()
+    this.basketData().splice(0, this.basketData().length);
+    this.setSumBasket();
 
     const startdate: Date = this.formDateSelection.value.start;
     const enddate: Date = this.formDateSelection.value.end;
-
-    // this.listVasketsSubscription = this.dataService
-    //   .getListBaskets(startdate, enddate)
-    //   .pipe()
-    //   .subscribe((data) => {
-    //     console.log(data)
-    //     this.basketData.set(data)
-    //     this.loading.set(false);
-    //   });
 
     this.listVasketsSubscription = this.dataService
       .getCartsWithDetails(startdate, enddate)
       .pipe()
       .subscribe((data) => {
         console.log(data);
-        this.basketData.set(data)
+        this.basketData.set(data);
         this.setSumBasket();
 
-        data.forEach(element => {
-          element.sum = element.products.reduce((sum, current) => sum + current.price * current.quantity, 0);
+        data.forEach((element) => {
+          element.sum = element.products.reduce(
+            (sum, current) => sum + current.price * current.quantity,
+            0
+          );
         });
 
         this.loading.set(false);
       });
   }
 
-  public setSumBasket(){
-    let totalSum: number = 0
+  public setSumBasket() {
+    let totalSum: number = 0;
 
-    this.basketData().forEach(element => {
-      totalSum = totalSum + element.products.reduce((sum, current) => sum + current.price * current.quantity, 0);
+    this.basketData().forEach((element) => {
+      totalSum =
+        totalSum +
+        element.products.reduce(
+          (sum, current) => sum + current.price * current.quantity,
+          0
+        );
     });
 
     this.sumBasket.set(totalSum);
   }
-
 }

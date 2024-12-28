@@ -1,5 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { basket, products, user } from '../../models/products';
+import { products } from '../../models/products';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -10,66 +10,67 @@ import { DataService } from '../../services/data.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { UserLoginComponent } from '../user-login/user-login.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-
+import { basket } from '../../models/basket';
+import { user } from '../../models/user';
 
 @Component({
   selector: 'app-product-details',
-  imports: [MatCardModule, MatIconModule, MatDividerModule, CommonModule, MatProgressBarModule],
+  imports: [
+    MatCardModule,
+    MatIconModule,
+    MatDividerModule,
+    CommonModule,
+    MatProgressBarModule,
+  ],
   templateUrl: './product-details.component.html',
-  styleUrl: './product-details.component.scss'
+  styleUrl: './product-details.component.scss',
 })
-export class ProductDetailsComponent {
-
-  public product: products = new products;
+export class ProductDetailsComponent implements OnInit {
+  public product: products = new products();
   private productSubscription: Subscription | undefined;
   public isDisabledBasket = signal(false);
-  private basket: basket = new basket
+  private basket: basket = new basket();
 
   constructor(
     private route: ActivatedRoute,
     private dataService: DataService,
     public formLogin: MatDialog
-  ){}
+  ) {}
 
-  ngOnInit(){
+  ngOnInit() {
     this.getProduct();
   }
 
-  ngOnDestroy(){
-    if(this.productSubscription) this.productSubscription.unsubscribe
+  ngOnDestroy() {
+    if (this.productSubscription) this.productSubscription.unsubscribe;
   }
 
-  getProduct(){
+  getProduct() {
     this.productSubscription = this.route.data.subscribe((data) => {
       this.product = data['data'];
     });
   }
 
-  public addProductToBasket(){
+  public addProductToBasket() {
+    const currentUser: user = this.dataService.currentUser;
 
-      const currentUser: user = this.dataService.currentUser;
+    if (currentUser.id > 0) {
+      this.isDisabledBasket.set(true);
 
-      if(currentUser.id > 0){
-        this.isDisabledBasket.set(true);
+      this.dataService.addProductToBasket(this.product).subscribe((data) => {
+        this.isDisabledBasket.set(false);
 
-        this.dataService.addProductToBasket(this.product).subscribe((data) => {
-          this.isDisabledBasket.set(false);
+        this.basket = data;
+        const countBasket: number = this.basket.products.length;
 
-          this.basket = data;
-          const countBasket: number = this.basket.products.length
-
-          this.dataService.currentBasket = this.basket;
-          this.dataService.countBasket = countBasket
-          this.dataService.updateBadgeCount(this.dataService.countBasket);
-
-        })
-      }else{
-        let formLoginConfig = new MatDialogConfig();
-        formLoginConfig.width = '500px';
-        this.formLogin.open(UserLoginComponent, formLoginConfig);
-      }
-
+        this.dataService.currentBasket = this.basket;
+        this.dataService.countBasket = countBasket;
+        this.dataService.updateBadgeCount(this.dataService.countBasket);
+      });
+    } else {
+      let formLoginConfig = new MatDialogConfig();
+      formLoginConfig.width = '500px';
+      this.formLogin.open(UserLoginComponent, formLoginConfig);
     }
-
-
+  }
 }

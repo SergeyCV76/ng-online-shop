@@ -36,9 +36,6 @@
       </mat-nav-list>
     </mat-drawer>
     <mat-drawer-content>
-
-
-
       <div class="container responsive-grid">
         <mat-card *ngFor="let product of paginatedProducts()">
           <div (click)="openingDetailPage()" [routerLink]="['/product/', product.id]" class="mat-card-image-block">
@@ -58,12 +55,10 @@
         </mat-card>
       </div>
       <mat-paginator class="mat-paginator"
-
         [length]="products()?.length"
         [pageSize]="pageSize()"
         [pageSizeOptions]="pageSizeOptions"
         (page)="onPageChange($event)">
-      >
       </mat-paginator>
     </mat-drawer-content>
   </mat-drawer-container>

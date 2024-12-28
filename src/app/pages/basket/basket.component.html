@@ -3,10 +3,8 @@
   <span class="example-spacer"></span>
   <p>{{sumBasket() | currency}}</p>
 </div>
-
 <mat-divider></mat-divider>
 <mat-progress-bar mode="indeterminate" *ngIf="isLoad()"></mat-progress-bar>
-
 <div class="conteiner" *ngIf="basketNotEmpty">
   <mat-card *ngFor="let product of basketProducts()">
     <div class="mat-card-image-block">
@@ -15,16 +13,12 @@
     <mat-card-header>
       <mat-card-title>{{ product.productTitle }} </mat-card-title>
     </mat-card-header>
-
     <span class="example-spacer"></span>
-
     <mat-card-actions>
       <p>{{product.price | currency }}</p>
       <button mat-flat-button (click)="onClickPlus(product)" [disabled]="isLoad()">+</button>
       <p>{{product.quantity }}</p>
       <button mat-flat-button (click)="onClickMinus(product)" [disabled]="isLoad()">-</button>
     </mat-card-actions>
-
   </mat-card>
-
 </div>

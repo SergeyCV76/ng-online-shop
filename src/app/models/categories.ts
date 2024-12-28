@@ -1,2 +1,1 @@
-export interface ICategories{
-}
+export interface ICategories {}

@@ -14,9 +14,11 @@ mat-form-field{
   width: 400px;
   font-size: 24px;
 }
+
 mat-icon{
   font-size: 360px;
 }
+
 .example-button-row{
   display: flex;
   align-items: center;
@@ -28,6 +30,7 @@ mat-icon{
   display: flex;
   flex-direction: row;
 }
+
 .mat-expansion-panel-discr p{
   width: 30%;
   border: solid 1px black;

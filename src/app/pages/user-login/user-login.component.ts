@@ -17,7 +17,7 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
-import { user } from '../../models/products';
+import { user } from '../../models/user';
 import { DataService } from '../../services/data.service';
 import { catchError, of, Subscription } from 'rxjs';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -33,7 +33,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatIconModule,
     FormsModule,
     ReactiveFormsModule,
-    MatProgressBarModule
+    MatProgressBarModule,
   ],
   templateUrl: './user-login.component.html',
   styleUrl: './user-login.component.scss',
@@ -42,7 +42,7 @@ export class UserLoginComponent implements OnInit, OnDestroy {
   public data: user = new user();
   private userSubscription: Subscription | undefined;
   private allUserSubscription: Subscription | undefined;
-  public incorrectlogin: boolean = false
+  public incorrectlogin: boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<UserLoginComponent>,
@@ -56,8 +56,14 @@ export class UserLoginComponent implements OnInit, OnDestroy {
   }
 
   public myFormLoginPass: UntypedFormGroup = new UntypedFormGroup({
-    username: new UntypedFormControl(this.data?.username ?? '', Validators.required),
-    password: new UntypedFormControl(this.data?.password ?? '', Validators.required),
+    username: new UntypedFormControl(
+      this.data?.username ?? '',
+      Validators.required
+    ),
+    password: new UntypedFormControl(
+      this.data?.password ?? '',
+      Validators.required
+    ),
   });
 
   onNoClick(): void {
@@ -65,44 +71,45 @@ export class UserLoginComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-
     this.myFormLoginPass.disable();
 
     this.data = {
       username: this.myFormLoginPass.value.username,
       password: this.myFormLoginPass.value.password,
       token: '',
-      id: 0
+      id: 0,
     };
 
-    this.allUserSubscription = this.dataService.getAllUser().subscribe(
-      (response) => {
-        const userSearch = response.filter(data => data.username === this.data.username)
-        if(userSearch.length > 0){
+    this.allUserSubscription = this.dataService
+      .getAllUser()
+      .subscribe((response) => {
+        const userSearch = response.filter(
+          (data) => data.username === this.data.username
+        );
+        if (userSearch.length > 0) {
           this.data.id = userSearch[0].id;
-        }else{
-          console.log("User is not registered")
+        } else {
+          console.log('User is not registered');
         }
-      }
-    );
+      });
 
     this.userSubscription = this.dataService.userlogin(this.data).subscribe(
       (response) => {
         this.data.token = response.token;
         this.dataService.setCurrentUser(this.data);
         this.dialogRef.close(this.data);
-      }, (error) => {
+      },
+      (error) => {
         this.incorrectlogin = true;
         this.myFormLoginPass.enable();
       }
     );
-
   }
 
   ngOnInit() {}
 
   ngOnDestroy(): void {
-    if(this.userSubscription) this.userSubscription.unsubscribe
-    if(this.allUserSubscription) this.allUserSubscription.unsubscribe
+    if (this.userSubscription) this.userSubscription.unsubscribe;
+    if (this.allUserSubscription) this.allUserSubscription.unsubscribe;
   }
 }
