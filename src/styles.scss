@@ -9,6 +9,9 @@
     filled-container-color: #bcb8ac,
     filled-label-text-color: black,
   ));
+  @include mat.table-overrides((
+    background-color: white,
+  ));
 }
 
 html,

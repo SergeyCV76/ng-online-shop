@@ -34,12 +34,16 @@ export class basket{
   public userId: number
   public date: string
   public products: basketProduct[]
+  public user: user | undefined
+  public sum: number
 
   constructor(){
     this.id = 0
     this.userId = 0
     this.date = ""
     this.products = []
+    this.user = new user;
+    this.sum = 0
   }
 }
 

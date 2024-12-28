@@ -1,0 +1,42 @@
+
+.header{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 36px;
+}
+
+.example-spacer{
+  flex: 1 1 auto;
+}
+
+mat-form-field{
+  width: 400px;
+  font-size: 24px;
+}
+mat-icon{
+  font-size: 360px;
+}
+.example-button-row{
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+  height: 60px;
+}
+
+.mat-expansion-panel-discr{
+  display: flex;
+  flex-direction: row;
+}
+.mat-expansion-panel-discr p{
+  width: 30%;
+  border: solid 1px black;
+}
+
+mat-expansion-panel-header{
+  border: solid 1px black;
+}
+
+mat-expansion-panel{
+  margin-top: 10px;
+}

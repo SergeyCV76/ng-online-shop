@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { basket, ICategories, products, user } from '../models/products';
-import { BehaviorSubject, catchError, of, Subscription, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, forkJoin, map, of, Subscription, switchMap, throwError } from 'rxjs';
 
 
 @Injectable({
@@ -121,4 +121,46 @@ export class DataService {
     return throwError(() => new Error('An error has occurred. Please try again.'));
   }
 
+  public getListBaskets(startdate: Date, enddate: Date): Observable<basket[]>{
+    return this.http.get<basket[]>(`${this.apiUrl}/carts?startdate=${this.formatDate(startdate)}&enddate=${this.formatDate(enddate)}`).pipe(
+      catchError(this.handleError)
+    );;
+  }
+
+  public getUserById(id: number): Observable<user>{
+    return this.http.get<user>(`${this.apiUrl}/users/${id}`).pipe(
+      catchError(this.handleError)
+    );;
+  }
+
+  public formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  getCartsWithDetails(startdate: Date, enddate: Date): Observable<basket[]> {
+    return this.getListBaskets(startdate, enddate).pipe(
+      switchMap(carts => {
+        const userRequests = carts.map(cart => this.getUserById(cart.userId));
+        const productRequests = carts.flatMap(cart => cart.products.map(item => this.getProductsById(item.productId)));
+
+        return forkJoin([forkJoin(userRequests), forkJoin(productRequests)]).pipe(
+          map(([users, products]) => {
+            return carts.map(cart => {
+              cart.user = users.find(user => user.id === cart.userId);
+              cart.products = cart.products.map(item => {
+                item.price = products.find(product => product.id === item.productId)!.price;
+                item.productTitle = products.find(product => product.id === item.productId)!.title;
+                item.productImage = products.find(product => product.id === item.productId)!.image;
+                return item;
+              });
+              return cart;
+            });
+          })
+        );
+      })
+    );
+  }
 }
