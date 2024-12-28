@@ -61,8 +61,8 @@ export class ProductsComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
   public pageIndex = signal(0);
-  public pageSize = signal(5);
-  public pageSizeOptions: number[] = [5, 10, 25, 100];
+  public pageSize = signal(4);
+  public pageSizeOptions: number[] = [4, 8, 16, 32];
 
   constructor(
     private dataService: DataService,

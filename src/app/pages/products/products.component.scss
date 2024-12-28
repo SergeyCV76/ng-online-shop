@@ -12,6 +12,7 @@ a{
 
 .container{
   padding: 24px;
+  width: 100%;
 }
 
 img {
@@ -110,7 +111,10 @@ mat-form-field{
 }
 
 .mat-drawer-container{
-  height: 80vh;
+  // height: 85vh;
 }
 
-
+mat-drawer{
+  margin-top: 10px;
+  // width: 101px;
+}
