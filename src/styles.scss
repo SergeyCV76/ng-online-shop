@@ -1,5 +1,6 @@
-
 @use '@angular/material' as mat;
+
+@import "@coreui/coreui/scss/coreui";
 
 :root {
   @include mat.form-field-overrides((

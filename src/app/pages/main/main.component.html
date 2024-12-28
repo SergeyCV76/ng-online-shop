@@ -1,3 +1,16 @@
 <h1>Page main</h1>
 <mat-divider></mat-divider>
-<p>page-main works!</p>
+<c-carousel class="carousel">
+  <c-carousel-indicators class="carousel-indicators"></c-carousel-indicators>
+  <c-carousel-inner class="carousel-item">
+    <c-carousel-item *ngFor="let slide of items">
+      <img
+        [src]="slide.image"
+        alt="{{ slide.title }}"
+        class="d-block w-100"
+        loading="lazy" />
+    </c-carousel-item>
+  </c-carousel-inner>
+  <c-carousel-control class="carousel-button" [routerLink] caption="Previous" direction="prev"></c-carousel-control>
+  <c-carousel-control class="carousel-button" [routerLink] caption="Next" direction="next"></c-carousel-control>
+</c-carousel>
