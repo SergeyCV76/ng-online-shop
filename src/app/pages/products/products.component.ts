@@ -1,24 +1,24 @@
-import { AppComponent } from './../../app.component';
-import { user, basket, products } from './../../models/products';
 
-import { ChangeDetectionStrategy, Component, computed, EventEmitter, OnInit, Output, signal} from '@angular/core';
+import { products } from './../../models/products';
+import { ChangeDetectionStrategy, Component, computed, OnInit, signal} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDividerModule } from '@angular/material/divider';
 import { DataService } from '../../services/data.service';
 import { Subscription } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
-
 import { Router, RouterLink} from '@angular/router';
-import { ICategories } from '../../models/products';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { UserLoginComponent } from '../user-login/user-login.component';
+import { ICategories } from '../../models/categories';
+import { basket } from '../../models/basket';
+import { user } from '../../models/user';
 
 
 @Component({
@@ -56,6 +56,10 @@ export class ProductsComponent implements OnInit{
   private valSort = "1";
   public isDisabledBasket = signal(false);
   private basket: basket = new basket
+
+  public pageIndex = signal(0);
+  public pageSize = signal(5);
+  public pageSizeOptions: number[] = [5, 10, 25, 100];
 
   constructor(
     private dataService: DataService,
@@ -165,5 +169,15 @@ export class ProductsComponent implements OnInit{
 
   public openingDetailPage(){
     this.isDisabledBasket.set(true)
+  }
+
+  public paginatedProducts(): products[] | undefined {
+    const startIndex = this.pageIndex() * this.pageSize();
+    return this.products()?.slice(startIndex, startIndex + this.pageSize());
+  }
+
+  public onPageChange(event: PageEvent) {
+    this.pageIndex.set(event.pageIndex);
+    this.pageSize.set(event.pageSize);
   }
 }
