@@ -54,7 +54,7 @@
           </mat-card-actions>
         </mat-card>
       </div>
-      <mat-paginator class="mat-paginator"
+      <mat-paginator #paginator class="mat-paginator"
         [length]="products()?.length"
         [pageSize]="pageSize()"
         [pageSizeOptions]="pageSizeOptions"

@@ -5,6 +5,7 @@ import {
   computed,
   OnInit,
   signal,
+  ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDividerModule } from '@angular/material/divider';
@@ -58,6 +59,7 @@ export class ProductsComponent implements OnInit {
   public isDisabledBasket = signal(false);
   private basket: basket = new basket();
 
+  @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
   public pageIndex = signal(0);
   public pageSize = signal(5);
   public pageSizeOptions: number[] = [5, 10, 25, 100];
@@ -115,6 +117,7 @@ export class ProductsComponent implements OnInit {
         .subscribe((data) => {
           this.products.set(data);
           this.sortProducts();
+          this.paginator?.firstPage();
           this.isDisabledBasket.set(false);
         });
     }
